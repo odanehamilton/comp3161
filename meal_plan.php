@@ -6,7 +6,17 @@
 <body>
   <div class="container-fluid">
     <div class="jumbotron">
-        <h1 align="center">Welcome</h1>
+        <h1 align="center">Hello there, <?php 
+        $id = $_SESSION['id'];
+        $name_return = mysql_query("SELECT fname FROM customer WHERE customer_id = '$id'");
+        if (mysql_num_rows($name_return) == 1) {
+
+        while ($row = mysql_fetch_assoc($name_return)) 
+{          $_SESSION["name"] = $row['fname'];
+        }
+      }
+
+if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     </div>
 
 <nav class="navbar navbar-default">
@@ -24,24 +34,26 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="index.php">Home</a></li>
         <li><a href="profile.php">Profile Home</a></li>
-        <li><a href="recipeAdd.php">Add Recipe</a></li>
-        <li class="active"><a href="#">Meal Plan</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Recipe <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <li><a href="recipeAdd.php">Add Recipe</a></li>
+            <li><a href="ingredientsAdd.php">Add Ingredients</a></li>
+            <li><a href="instructionAdd.php">Add Instructions</a></li>
+            <li><a href="search.php">Search Recipes</a></li>
+          </ul>
+        </li>
+      <li class="dropdown active">          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meal Plan <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="meal_plan.php">Add Meal</a></li>
+            <li><a href="generate_meal.php">Generate Based on Calories</a></li>
+            <li><a href="display.php">Display Meals</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="logout.php">Logout</a></li>
+        <li><a href="index.php"><? $_POST['logout'] = true; ?>Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -145,6 +157,10 @@ if(isset($_POST['add_meal'])) {
     $serving_size = $_POST['serving_size'];
     $meal_image = $_POST['meal_image'];
     $recipe_name = $_POST['recipe_name'];
+    $image = addslashes(file_get_contents($_FILES['meal_image']['tmp_name']));
+    $image_name =  $image['name'];
+
+    echo "<h1>$image</h1>";
 
     $temp = mysql_query("SELECT * FROM recipe WHERE recipe_name = '$recipe_name';"); 
     if (mysql_num_rows($temp) == 1) {
@@ -154,7 +170,7 @@ if(isset($_POST['add_meal'])) {
         }
       }
 
-    mysql_query("INSERT INTO meal (meal_type, meal_day, serving_size, meal_image, recipe_id) values ('$meal_type', '$meal_day', '$serving_size', '$meal_image', '$recipe_id')");
+    mysql_query("INSERT INTO meal (meal_type, meal_day, serving_size, meal_image, recipe_id) values ('$meal_type', '$meal_day', '$serving_size', '$image_name', '$recipe_id')");
     header('Location: profile.php');
 }
 ?>

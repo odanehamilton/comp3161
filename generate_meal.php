@@ -19,8 +19,7 @@
 if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     </div>
 
-
-    <nav class="navbar navbar-default">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -36,7 +35,7 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="profile.php">Profile Home</a></li>
-   <li class="dropdown">
+<li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Recipe <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="recipeAdd.php">Add Recipe</a></li>
@@ -45,70 +44,69 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
             <li><a href="search.php">Search Recipes</a></li>
           </ul>
         </li>
- <li class="dropdown active">
+        <li class="dropdown active">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meal Plan <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="meal_plan.php">Add Meal</a></li>
             <li><a href="generate_meal.php">Generate Based on Calories</a></li>
-            <li><a href="#">Display Meals</a></li>
+            <li><a href="display.php">Display Meals</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-       <li><a href="index.php"><? $_POST['logout'] = true; ?>Logout</a></li>
+        <li><a href="index.php"><? $_POST['logout'] = true; ?>Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<h2>Meals that were created already include the following</h2><br/><br/>
 
 
-<?php
-$meals = mysql_query("CALL get_meals();");
-#$recipes = mysql_query("SELECT * FROM recipe;");
-#while($listing = mysql_fetch_assoc($recipes)){
- # $recipe_name[] = $listing['recipe_name'];
-  #$recipe_id[] = $listing['recipe_id'];
-#}
+ <div class="center-block" style="max-width:700px">
 
-        while ($row = mysql_fetch_assoc($meals)) 
-{     $meal_type[] = $row['meal_type']; 
-      $meal_day[] = $row['meal_day'];
-      $meal_image[] = $row['meal_image'];
-      
- }       
- for($i=0;$i<mysql_num_rows($meals); $i++) {
-  
-$data = $meal_type[$i];
-$day = $meal_day[$i];
-$image = $meal_image[$i]
-
-
-?>
-
-
-
-<div class="row">
-  <div class="col-sm-6 col-md-3">
-    <div class="thumbnail">
-      <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $image).'"/>'; ?>
-      <div class="caption">
-        <h3>Recipe Name</h3>
-        <p>...</p>
-        <p><p class="btn btn-primary"><?php echo "$data"; ?></p> <p class="btn btn-default"><?php echo "$day"; ?></p></p>
-      </div>
-    </div>
+<form class="form" action="generate_meal.php" method="post">
+  <div class="center-block" style="max-width:450px">
+  <div class="form-group">
+    <label for="calorie_count">Number of Calories</label>
+    <input type="number" class="form-control" id="calorie_count" name="calorie_count" placeholder="Number of calories">
   </div>
+  <br/><br/>
+  <button type="submit" class="btn btn-default" name="request_meal" id="request_meal"><h4>Request Meal</h4></button></a>
 </div>
+  </div><!-- center block -->
+</form> 
 
-
-
-<?php
-          }
-
-      ?>
+</div>
   </div><!-- container-fluid-->
 
 </body>
 
 </html>
+
+
+<?php 
+
+if(isset($_POST['request_meal'])) {
+      
+
+    $connect = mysql_connect ('localhost','root','');
+    mysql_select_db('comp3161', $connect);
+
+    $calorie_count = $_POST['calorie_count'];
+
+    $temp = mysql_query("SELECT * FROM meal WHERE meal_calories <= '$calorie_count';"); 
+    $meal_id = array();
+    if (mysql_num_rows($temp) > 0) {
+
+        while ($row = mysql_fetch_assoc($temp)) 
+{          $meal_id[] = $row['meal_id'];
+        }
+       for($i=0;$i<count($meal_id); $i++) {
+  
+           echo "<div><h6>Meals found are:</h6>$meal_id[$i]</div>";
+          }
+      }
+      else {
+        echo "Not found";
+      }
+}
+?>

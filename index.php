@@ -25,3 +25,12 @@
 
 	</body>
 </html>
+
+<?php
+
+if(isset($_POST['logout'])) {
+      
+$_SESSION['logged_in'] = false;
+}
+
+?>

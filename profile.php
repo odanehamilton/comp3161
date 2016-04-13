@@ -35,60 +35,31 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="index.php">Home</a></li>
         <li class="active"><a href="#">Profile Home</a></li>
-        <li><a href="recipeAdd.php">Add Recipe</a></li>
-        <li><a href="meal_plan.php">Meal Plan</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Recipe <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <li><a href="recipeAdd.php">Add Recipe</a></li>
+            <li><a href="ingredientsAdd.php">Add Ingredients</a></li>
+            <li><a href="instructionAdd.php">Add Instructions</a></li>
+            <li><a href="search.php">Search Recipes</a></li>
+          </ul>
+        </li>
+       <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meal Plan <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="meal_plan.php">Add Meal</a></li>
+            <li><a href="generate_meal.php">Generate Based on Calories</a></li>
+            <li><a href="display.php">Display Meals</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="logout.php">Logout</a></li>
+       <li><a href="index.php"><? $_POST['logout'] = true; ?>Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-
-<div class="row">
-  <div class="col-xs-1"><h4>Sunday</h4>
-    <h6><a href="meal_plan.php">Breakfast</a></h6>
-    <h6>Lunch</h6>
-    <h6>Dinner</h6>
-    <h6>Snack</h6>
-    </div>
-
-  <div class="col-xs-1"><h4>Monday</h4></div>
-  <div class="col-xs-1"><h4>Tuesday</h4></div>
-  <div class="col-xs-1"><h4>Wednesday</h4></div>
-  <div class="col-xs-1"><h4>Thursday</h4></div>
-  <div class="col-xs-1"><h4>Friday</h4></div>
-  <div class="col-xs-1"><h4>Saturday</h4></div>
-</div>
-
-
-<?php
-$meals = mysql_query("CALL get_meals();");
-    $meal_image = array();
-        while ($row = mysql_fetch_assoc($meals)) 
-{     $meal_image[] = $row['meal_image']; 
-      
- }       
-
-foreach($meal_image as $data)
-{
-           echo "<img src=\"$data\" ";
-          }
-
-      ?>
   </div><!-- container-fluid-->
 
 </body>

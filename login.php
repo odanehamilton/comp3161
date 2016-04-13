@@ -76,8 +76,16 @@ if(isset($_POST['login'])) {
 {          $_SESSION["id"] = $row['account_id'];
           $_SESSION["logged_in"] = true;
         }
-      header('Location: update.php');
+        $id = $_SESSION['id'];
 
+        $ids = mysql_query("SELECT * from customer WHERE customer_id = '$id';");
+        if (mysql_num_rows($ids) == 1){
+      header('Location: profile.php');
+}
+else
+{
+  header('Location: update.php');
+}
         }
          else {
           $message = "Invalid Login. Please try again";
