@@ -6,7 +6,7 @@
 <body>
   <div class="container-fluid">
     <div class="jumbotron">
-        <h1 align="center">Hello there, <?php 
+        <h1 align="center" style="font-family: 'Indie Flower', serif;">Hello there, <?php 
         $id = $_SESSION['id'];
         $name_return = mysql_query("SELECT fname FROM customer WHERE customer_id = '$id'");
         if (mysql_num_rows($name_return) == 1) {
@@ -42,6 +42,7 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
             <li><a href="ingredientsAdd.php">Add Ingredients</a></li>
             <li><a href="instructionAdd.php">Add Instructions</a></li>
             <li><a href="search.php">Search Recipes</a></li>
+            <li><a href="viewRecipe.php">View Recipes</a></li>
           </ul>
         </li>
         <li class="dropdown active">
@@ -94,15 +95,18 @@ if(isset($_POST['request_meal'])) {
     $calorie_count = $_POST['calorie_count'];
 
     $temp = mysql_query("SELECT * FROM meal WHERE meal_calories <= '$calorie_count';"); 
-    $meal_id = array();
     if (mysql_num_rows($temp) > 0) {
 
         while ($row = mysql_fetch_assoc($temp)) 
-{          $meal_id[] = $row['meal_id'];
+{          $recipe_id[] = $row['recipe_id'];
         }
-       for($i=0;$i<count($meal_id); $i++) {
-  
-           echo "<div><h6>Meals found are:</h6>$meal_id[$i]</div>";
+       for($i=0;$i<count($recipe_id); $i++) {
+        $temper = mysql_query("SELECT * FROM recipe where recipe_id='$recipe_id[$i]'");
+          while ($rower = mysql_fetch_assoc($temper))
+          {
+            $recipe_name[] = $rower['recipe_name'];
+          }
+           echo "<div><h6>Meals found are:</h6>$recipe_name[$i]</div>";
           }
       }
       else {

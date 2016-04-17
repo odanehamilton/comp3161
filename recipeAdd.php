@@ -31,6 +31,7 @@
             <li><a href="ingredientsAdd.php">Add Ingredients</a></li>
             <li><a href="instructionAdd.php">Add Instructions</a></li>
             <li><a href="search.php">Search Recipes</a></li>
+            <li><a href="viewRecipe.php">View Recipes</a></li>
           </ul>
         </li>
         <li class="dropdown">

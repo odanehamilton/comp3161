@@ -1,26 +1,14 @@
 <?php require_once('config.php'); ?>
 <html>
 <?php include_once('header.html'); ?>
-
-
 <body>
   <div class="container-fluid">
     <div class="jumbotron">
-        <h1  align="center" style="font-family: 'Indie Flower', serif;">Welcome <?php 
-        $id = $_SESSION['id'];
-        $name_return = mysql_query("SELECT fname FROM customer WHERE customer_id = '$id'");
-        if (mysql_num_rows($name_return) == 1) {
-
-        while ($row = mysql_fetch_assoc($name_return)) 
-{          $_SESSION["name"] = $row['fname'];
-        }
-      }
-
-if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
+        <h1 align="center" style="font-family: 'Indie Flower', serif;">Recipes</h1>
     </div>
 
 
-     <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -35,8 +23,8 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="profile.php">Profile Home</a></li>
-<li>
+        <li><a href="profile.php">Profile Home</a></li>
+<li class="dropdown active">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Recipe <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="recipeAdd.php">Add Recipe</a></li>
@@ -61,8 +49,50 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-  </div><!-- container-fluid-->
 
+
+<div class="center-block" style="max-width:500px">
+
+  <div class="center-block" style="max-width:450px">
+
+<?php
+$recipes = mysql_query("SELECT * from recipe where recipe_id = 18");
+        while ($row = mysql_fetch_assoc($recipes)) 
+{     $recipe_name[] = $row['recipe_name']; 
+      $calories[] = $row['recipe_calories'];
+      
+ }       
+
+for ($i=0; $i<mysql_num_rows($recipes); $i++)
+{
+           echo "<h3>$recipe_name[$i]</h3><br/><h3>Calories</h3><p>$calories[$i]</p>";
+          }
+
+
+      ?>
+
+
+
+    <h3>Instructions</h3>
+      <?php
+$instructions = mysql_query("SELECT * from instructions where recipe_id = 18");
+        while ($row = mysql_fetch_assoc($instructions)) 
+{     $instruction[] = $row['instruction']; 
+      $step_num[] = $row['step_num'];
+      
+ }       
+
+for ($i=0; $i<mysql_num_rows($instructions); $i++)
+{
+           echo "<h4>$step_num[$i]. $instruction[$i]</h4>";
+          }
+
+      ?>
+
+  </div><!-- center block -->
+
+</div>
+  </div><!-- container-fluid-->
 </body>
 
 </html>

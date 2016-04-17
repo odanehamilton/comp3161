@@ -6,7 +6,7 @@
 <body>
   <div class="container-fluid">
     <div class="jumbotron">
-        <h1 align="center">Hello there, <?php 
+        <h1  align="center" style="font-family: 'Indie Flower', serif;">Hello there, <?php 
         $id = $_SESSION['id'];
         $name_return = mysql_query("SELECT fname FROM customer WHERE customer_id = '$id'");
         if (mysql_num_rows($name_return) == 1) {
@@ -42,6 +42,7 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
             <li><a href="ingredientsAdd.php">Add Ingredients</a></li>
             <li><a href="instructionAdd.php">Add Instructions</a></li>
             <li><a href="search.php">Search Recipes</a></li>
+            <li><a href="viewRecipe.php">View Recipes</a></li>
           </ul>
         </li>
       <li class="dropdown active">          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meal Plan <span class="caret"></span></a>
@@ -68,7 +69,7 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
     <label for="ingredient_name">Recipe</label><br/>
     <select name = "recipe_name">
       <?php
-$recipe = mysql_query("CALL get_all_recipe();");
+$recipe = mysql_query("SELECT * from recipe;");
     $recipe_name = array();
         while ($row = mysql_fetch_assoc($recipe)) 
 {     $recipe_name[] = $row['recipe_name']; 
@@ -157,10 +158,6 @@ if(isset($_POST['add_meal'])) {
     $serving_size = $_POST['serving_size'];
     $meal_image = $_POST['meal_image'];
     $recipe_name = $_POST['recipe_name'];
-    $image = addslashes(file_get_contents($_FILES['meal_image']['tmp_name']));
-    $image_name =  $image['name'];
-
-    echo "<h1>$image</h1>";
 
     $temp = mysql_query("SELECT * FROM recipe WHERE recipe_name = '$recipe_name';"); 
     if (mysql_num_rows($temp) == 1) {

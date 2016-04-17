@@ -6,7 +6,7 @@
 <body>
   <div class="container-fluid">
     <div class="jumbotron">
-        <h1 align="center">Hello there, <?php 
+        <h1  align="center" style="font-family: 'Indie Flower', serif;">Hello there, <?php 
         $id = $_SESSION['id'];
         $name_return = mysql_query("SELECT fname FROM customer WHERE customer_id = '$id'");
         if (mysql_num_rows($name_return) == 1) {
@@ -43,6 +43,7 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
             <li><a href="ingredientsAdd.php">Add Ingredients</a></li>
             <li><a href="instructionAdd.php">Add Instructions</a></li>
             <li><a href="search.php">Search Recipes</a></li>
+            <li><a href="viewRecipe.php">View Recipes</a></li>
           </ul>
         </li>
  <li class="dropdown active">
@@ -64,24 +65,35 @@ if ($_SESSION['name']) {echo $_SESSION['name'];} else {echo "user";} ?></h1>
 
 
 <?php
-$meals = mysql_query("CALL get_meals();");
-#$recipes = mysql_query("SELECT * FROM recipe;");
-#while($listing = mysql_fetch_assoc($recipes)){
- # $recipe_name[] = $listing['recipe_name'];
-  #$recipe_id[] = $listing['recipe_id'];
-#}
+
+$meals = mysql_query("SELECT * from meal;");
+
+
 
         while ($row = mysql_fetch_assoc($meals)) 
 {     $meal_type[] = $row['meal_type']; 
       $meal_day[] = $row['meal_day'];
       $meal_image[] = $row['meal_image'];
+      $recipe_id[] = $row['recipe_id'];
       
- }       
+ }      
+
+
  for($i=0;$i<mysql_num_rows($meals); $i++) {
+
+
   
 $data = $meal_type[$i];
 $day = $meal_day[$i];
-$image = $meal_image[$i]
+$image = $meal_image[$i];
+
+$temp = mysql_query("SELECT * FROM recipe WHERE recipe_id = '$recipe_id[$i]';"); 
+    if (mysql_num_rows($temp) == 1) {
+
+        while ($row = mysql_fetch_assoc($temp)) 
+{          $recipe_name = $row['recipe_name'];
+        }
+      }
 
 
 ?>
@@ -91,10 +103,9 @@ $image = $meal_image[$i]
 <div class="row">
   <div class="col-sm-6 col-md-3">
     <div class="thumbnail">
-      <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $image).'"/>'; ?>
+      <?php echo '<img src="data:image/jpeg;base64,'.base64_encode($image).'"/>'; ?>
       <div class="caption">
-        <h3>Recipe Name</h3>
-        <p>...</p>
+        <h3><?php echo "$recipe_name"?></h3>
         <p><p class="btn btn-primary"><?php echo "$data"; ?></p> <p class="btn btn-default"><?php echo "$day"; ?></p></p>
       </div>
     </div>
@@ -105,6 +116,7 @@ $image = $meal_image[$i]
 
 <?php
           }
+
 
       ?>
   </div><!-- container-fluid-->

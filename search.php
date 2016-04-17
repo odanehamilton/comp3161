@@ -4,7 +4,7 @@
 <body>
 	<div class="container-fluid">
 		<div class="jumbotron">
-  			<h1 align="center">Add Recipe</h1>
+  			<h1 align="center">Search for Recipe</h1>
 		</div>
 
 
@@ -50,57 +50,17 @@
 </nav>
 
 
-<div class="center-block" style="max-width:500px">
+ <div class="center-block" style="max-width:700px">
 
-<form class="form" action="recipeAdd.php" method="post">
+<form class="form" action="search.php" method="post">
   <div class="center-block" style="max-width:450px">
   <div class="form-group">
     <label for="recipe_name">Recipe Name</label>
-    <input type="text" class="form-control" id="recipe_name" name="recipe_name" placeholder="Recipe Name" autofocus="">
-  </div>
-  <div class="container">
-<?php 
-
-$connect = mysql_connect ('localhost','root','');
-    mysql_select_db('comp3161', $connect);
-
-    $measurements = mysql_query("SELECT * FROM measurements;"); 
-    $ingredients = mysql_query("SELECT * FROM ingredients;");
-$unit = array();
-$ingre_name = array();
-        while ($row = mysql_fetch_assoc($measurements)) 
-{     $unit[] = $row['measurement_unit']; 
-      
- }         
-while ($row = mysql_fetch_assoc($ingredients)) {
-
-$ingre_name[] = $row['ingredient_name'];} 
-
-foreach($ingre_name as $data_name)
-{
-
-?>
-  <select name = "measurement_unit">
-    <?php
-foreach ($unit as $data)
-          {
-           echo "<option value=\"$data\" name=\"measurement_unit\" id=\"measurement_unit\">$data</option>";
-          }
-  echo "<input type=\"checkbox\" name=\"ingredient_name\" value=\"$data_name\"> $data_name <br><br>";
-   
-?>
-</select>
-<?php
-}
-
-?>
-</div><!-- container -->
-<div class="form-group">
-    <label for="recipe_calorie">Calorie Count</label>
-    <input type="number" class="form-control" id="recipe_calorie" name="recipe_calorie" placeholder="Calorie Count">
+    <input type="text" class="form-control" id="recipe_name" name="recipe_name" placeholder="Recipe Name">
   </div>
   <br/><br/>
-  <button type="submit" class="btn btn-default btn-lg btn-block" name="recipeAdd">Add Recipe</button>
+  <button type="submit" class="btn btn-default" name="search" id="search"><h4>Search</h4></button></a>
+</div>
   </div><!-- center block -->
 </form> 
 
@@ -111,32 +71,37 @@ foreach ($unit as $data)
 </html>
 
 <?php 
-if(isset($_POST['recipeAdd'])) {
+if(isset($_POST['search'])) {
     $connect = mysql_connect ('localhost','root','');
     mysql_select_db('comp3161', $connect);
 
 
+$recipe_name = $_POST['recipe_name'];
 
-$measurements = mysql_query("SELECT * FROM measurements;"); 
-$ingre_name = array();
-        while ($row = mysql_fetch_assoc($measurements)) 
-{     $unit[] = $row['measurement_unit']; }
-
-    $ingredient_name = $_POST['ingredient_name'];
-
-    $recipe_name = $_POST['recipe_name'];
-    $measurement_unit = $_POST['measurement_unit'];
-    $recipe_calorie = $_POST['recipe_calorie'];
-    $temp = mysql_query("SELECT ingredient_id FROM ingredients WHERE ingredient_name = '$ingredient_name';"); 
-    if (mysql_num_rows($temp) == 1) {
+    $temp = mysql_query("SELECT * FROM recipe WHERE recipe_name LIKE '%$recipe_name%';"); 
+    $recipe_name = array();
+    if (mysql_num_rows($temp) > 0) {
 
         while ($row = mysql_fetch_assoc($temp)) 
-{          $ingredient_id = $row['ingredient_id'];
+{      $recipe_name[] = $row['recipe_name'];
         }
+
+?>
+
+<h4>Recipes found are:</h4>
+
+<?php
+
+
+       foreach($recipe_name as $name) {
+  
+           echo "<div><a href=\"\">$name</a></div>";
+          }
       }
-    
+      else {
+        echo "Not found";
+      }
 
-    $result = mysql_query("INSERT INTO recipe (recipe_name, ingredient_id, measurement_unit, recipe_calories) VALUES ('$recipe_name', '$ingredient_id', '$measurement_unit', '$recipe_calorie')"); 
+  }
 
-}
 ?>
